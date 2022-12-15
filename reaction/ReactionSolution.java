@@ -2,7 +2,7 @@ import sas.*;
 import sasio.*;
 import java.awt.Color;
 
-public class Reaction {
+public class ReactionSolution {
 
     /**
      * Gibt den aktuellen Zustand des Programms an
@@ -54,16 +54,16 @@ public class Reaction {
     View fenster;
 
     public static void main(String[] args) {
-        new Reaction();
+        new ReactionSolution();
     }
 
-    public Reaction() {
+    public ReactionSolution() {
         fenster = new View(400, 400);
         fenster.setName("Reaction");
         fenster.setBackgroundColor(Color.BLACK);
 
         // Initialisiere alle notwendigen Objekte
-        auswertungsAnzeige = new Text(fenster.getWidth() / 2 - 250, fenster.getHeight() / 2 + 80, "Auswertung", Color.GREEN);
+        auswertungsAnzeige = new Text(fenster.getWidth() / 2 - 100, fenster.getHeight() / 2 + 80, "Auswertung", Color.GREEN);
         zudrueckenderKreisAnzeige = new Text(10, 10, "Warte", Color.GREEN);
         roterKreis = new Circle(-50, fenster.getHeight() / 2, 50, Color.RED);
         blauerKreis = new Circle(fenster.getWidth() + 50, fenster.getHeight() / 2, 50, Color.BLUE);
@@ -120,8 +120,8 @@ public class Reaction {
         );
         blauerKreis.moveTo(
             Tools.randomNumber(50, fenster.getWidth() - 50), 
-            Tools.randomNumber(50, fenster.getHeight() + 250)
-        );
+            Tools.randomNumber(50, fenster.getHeight() - 50)
+        ); // TODO auf dem Fenster bewegen
 
         // Skaliere die Kreise entsprechend des Punktestandes
         // Mehr Punkte = kleinere Kreise
@@ -142,7 +142,7 @@ public class Reaction {
         startZeit = Tools.getStartTime();
         
         // Wähle einen zufällig einen Kreis, der gedrückt werden soll
-        int zudrueckenderKreis = Tools.randomNumber(1, 4);
+        int zudrueckenderKreis = Tools.randomNumber(1, 2); // TODO 3 inkludieren
 
         // Zeige an welcher Kreis gedrückt werden muss
         if (zudrueckenderKreis == 1) {
@@ -155,6 +155,7 @@ public class Reaction {
 
         // Warte solange bis der rote oder blaue Kreis gecklickt wurde
         while (true) {
+            // TODO je nach Punktestand sollen sich die Kreise bewegen
             if (roterKreis.mousePressed()) {
                 gedrueckterKreis = 1;
                 // verlasse die Schleife
@@ -182,6 +183,7 @@ public class Reaction {
         // Verstecke alle nicht mehr notwendigen Objekte
         zudrueckenderKreisAnzeige.setHidden(true);
         roterKreis.setHidden(true);
+        blauerKreis.setHidden(true); // TODO entfernen
         zustand = 2;
     }
 
@@ -189,7 +191,7 @@ public class Reaction {
         // Zeige alle notwendigen Objekte
         auswertungsAnzeige.setHidden(false);
         weiterButton.setHidden(false);
-        auswertungsAnzeige.setText("Punkte: " + punkte);
+        auswertungsAnzeige.setText("Punkte: " + punkte); // TODO punkte entfernen
 
         if (weiterButton.clicked()) {
             auswertungsAnzeige.setHidden(true);
