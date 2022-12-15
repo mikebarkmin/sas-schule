@@ -1,0 +1,13 @@
+#BlueJ class context
+comment0.target=Reaction
+comment1.params=
+comment1.target=Reaction()
+comment2.params=
+comment2.target=void\ ablaufStart()
+comment3.params=
+comment3.target=void\ ablaufReaktion()
+comment4.params=
+comment4.target=void\ ablaufAuswertung()
+comment5.params=
+comment5.target=void\ ablaufEnde()
+numComments=6
