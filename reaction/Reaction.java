@@ -142,15 +142,18 @@ public class Reaction {
         startZeit = Tools.getStartTime();
         
         // Wähle einen zufällig einen Kreis, der gedrückt werden soll
-        int zudrueckenderKreis = Tools.randomNumber(1, 4);
+        int zudrueckenderKreis = Tools.randomNumber(1, 3);
 
         // Zeige an welcher Kreis gedrückt werden muss
         if (zudrueckenderKreis == 1) {
-            zudrueckenderKreisAnzeige.setFontColor(Color.BLUE);
+            zudrueckenderKreisAnzeige.setFontColor(Color.RED);
             zudrueckenderKreisAnzeige.setText("Rot");
         } else if (zudrueckenderKreis == 2) {
-            zudrueckenderKreisAnzeige.setFontColor(Color.RED);
+            zudrueckenderKreisAnzeige.setFontColor(Color.BLUE);
             zudrueckenderKreisAnzeige.setText("Blau");
+        } else {
+            zudrueckenderKreisAnzeige.setFontColor(Color.GREEN);
+            zudrueckenderKreisAnzeige.setText("...");
         }
 
         // Warte solange bis der rote oder blaue Kreis gecklickt wurde
