@@ -16,6 +16,10 @@ public class Reaction {
     Button startButton;
     View view;
 
+    public static void main (String[] args) {
+        new Reaction();
+    }
+
     public Reaction() {
         view = new View(800, 600);
         view.setName("Reaction"); 

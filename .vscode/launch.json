@@ -4,7 +4,13 @@
     // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
     "version": "0.2.0",
     "configurations": [
-    
+        {
+            "type": "java",
+            "name": "Launch Reaction",
+            "request": "launch",
+            "mainClass": "Reaction",
+            "projectName": "sas-schule_e9e09ce7"
+        },
         {
             "type": "java",
             "name": "Launch Main",
