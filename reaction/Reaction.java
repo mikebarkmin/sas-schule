@@ -27,19 +27,19 @@ public class Reaction {
     /**
      * Text zur Anzeige im Auswertungszustand
      */
-    Text auswertungsAnzeige;
+    Text auswertungsText;
     /**
      * Text zur Anzeige des zudrückenden Kreises im Reaktionszustand
      */
-    Text zudrueckenderKreisAnzeige;
+    Text zudrueckenderKreisText;
     /**
      * Der rote Kreis im Reaktionszustand
      */
-    Circle roterKreis;
+    Circle gruenerKreis;
     /**
      * Der blaue Kreis im Reaktionszustand
      */
-    Circle blauerKreis;
+    Circle orangenerKreis;
     /**
      * Der Start-Button im Startzustand
      */
@@ -60,21 +60,21 @@ public class Reaction {
     public Reaction() {
         fenster = new View(400, 400);
         fenster.setName("Reaction");
-        fenster.setBackgroundColor(Color.BLACK);
+        fenster.setBackgroundColor(ColorPalette.DARK_PURPLE);
 
         // Initialisiere alle notwendigen Objekte
-        auswertungsAnzeige = new Text(fenster.getWidth() / 2 - 250, fenster.getHeight() / 2 + 80, "Auswertung", Color.GREEN);
-        zudrueckenderKreisAnzeige = new Text(10, 10, "Warte", Color.GREEN);
-        roterKreis = new Circle(-50, fenster.getHeight() / 2, 50, Color.RED);
-        blauerKreis = new Circle(fenster.getWidth() + 50, fenster.getHeight() / 2, 50, Color.BLUE);
-        startButton = new Button(fenster.getWidth() / 2 - 50, fenster.getHeight() / 2 - 25, 100, 50, "Start", Color.GREEN);
-        weiterButton = new Button(fenster.getWidth() / 2 - 75, fenster.getHeight() / 2 - 25, 150, 50, "Weiter", Color.PINK);
+        auswertungsText = new Text(fenster.getWidth() / 2 - 250, fenster.getHeight() / 2 + 80, "Auswertung", Color.GREEN);
+        zudrueckenderKreisText = new Text(10, 10, "Klicke", ColorPalette.OLD_LAVENDER);
+        gruenerKreis = new Circle(-50, fenster.getHeight() / 2, 50, ColorPalette.DEEP_SPACE_SPARKLE);
+        orangenerKreis = new Circle(fenster.getWidth() + 50, fenster.getHeight() / 2, 50, ColorPalette.TUMBLEWEED);
+        startButton = new Button(fenster.getWidth() / 2 - 50, fenster.getHeight() / 2 - 25, 100, 50, "Start", ColorPalette.GRULLO);
+        weiterButton = new Button(fenster.getWidth() / 2 - 75, fenster.getHeight() / 2 - 25, 150, 50, "Weiter", ColorPalette.GRULLO);
 
         // Verstecke alle irrelevanten Objekte
-        zudrueckenderKreisAnzeige.setHidden(true);
-        auswertungsAnzeige.setHidden(true);
-        roterKreis.setHidden(true);
-        blauerKreis.setHidden(true);
+        zudrueckenderKreisText.setHidden(true);
+        auswertungsText.setHidden(true);
+        gruenerKreis.setHidden(true);
+        orangenerKreis.setHidden(true);
         weiterButton.setHidden(true);
 
         /**
@@ -109,16 +109,16 @@ public class Reaction {
 
     public void ablaufReaktion() {
         // Zeige alle notwendigen Objekte
-        roterKreis.setHidden(false);
-        blauerKreis.setHidden(false);
-        zudrueckenderKreisAnzeige.setHidden(false);
+        gruenerKreis.setHidden(false);
+        orangenerKreis.setHidden(false);
+        zudrueckenderKreisText.setHidden(false);
 
         // Bewege Kreise zu einer zufälligen Position
-        roterKreis.moveTo(
+        gruenerKreis.moveTo(
             Tools.randomNumber(50, fenster.getWidth() - 50),
             Tools.randomNumber(50, fenster.getHeight() - 50)
         );
-        blauerKreis.moveTo(
+        orangenerKreis.moveTo(
             Tools.randomNumber(50, fenster.getWidth() - 50), 
             Tools.randomNumber(50, fenster.getHeight() + 250)
         );
@@ -135,8 +135,8 @@ public class Reaction {
         } else if (factor < 0.1) {
             factor = 0.1;
         }
-        roterKreis.scaleTo(50 * factor, 50 * factor);
-        blauerKreis.scaleTo(50 * factor, 50 * factor);
+        gruenerKreis.scaleTo(50 * factor, 50 * factor);
+        orangenerKreis.scaleTo(50 * factor, 50 * factor);
 
         // Merke dir die Startzeit in Millisekunden
         startZeit = Tools.getStartTime();
@@ -146,23 +146,20 @@ public class Reaction {
 
         // Zeige an welcher Kreis gedrückt werden muss
         if (zudrueckenderKreis == 1) {
-            zudrueckenderKreisAnzeige.setFontColor(Color.RED);
-            zudrueckenderKreisAnzeige.setText("Rot");
+            zudrueckenderKreisText.setFontColor(ColorPalette.DEEP_SPACE_SPARKLE);
         } else if (zudrueckenderKreis == 2) {
-            zudrueckenderKreisAnzeige.setFontColor(Color.BLUE);
-            zudrueckenderKreisAnzeige.setText("Blau");
+            zudrueckenderKreisText.setFontColor(ColorPalette.TUMBLEWEED);
         } else {
-            zudrueckenderKreisAnzeige.setFontColor(Color.GREEN);
-            zudrueckenderKreisAnzeige.setText("...");
+            zudrueckenderKreisText.setFontColor(ColorPalette.ERROR); 
         }
 
         // Warte solange bis der rote oder blaue Kreis gecklickt wurde
         while (true) {
-            if (roterKreis.mousePressed()) {
+            if (gruenerKreis.mousePressed()) {
                 gedrueckterKreis = 1;
                 // verlasse die Schleife
                 break;
-            } else if (blauerKreis.mousePressed()) {
+            } else if (orangenerKreis.mousePressed()) {
                 gedrueckterKreis = 2;
                 // verlasse die Schleife
                 break;
@@ -183,19 +180,19 @@ public class Reaction {
         }
 
         // Verstecke alle nicht mehr notwendigen Objekte
-        zudrueckenderKreisAnzeige.setHidden(true);
-        roterKreis.setHidden(true);
+        zudrueckenderKreisText.setHidden(true);
+        gruenerKreis.setHidden(true);
         zustand = 2;
     }
 
     public void ablaufAuswertung() {
         // Zeige alle notwendigen Objekte
-        auswertungsAnzeige.setHidden(false);
+        auswertungsText.setHidden(false);
         weiterButton.setHidden(false);
-        auswertungsAnzeige.setText("Punkte: " + punkte);
+        auswertungsText.setText("Punkte: " + punkte);
 
         if (weiterButton.clicked()) {
-            auswertungsAnzeige.setHidden(true);
+            auswertungsText.setHidden(true);
             weiterButton.setHidden(true);
             zustand = 1;
         }
