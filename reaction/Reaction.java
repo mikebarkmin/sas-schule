@@ -153,7 +153,7 @@ public class Reaction {
             zudrueckenderKreisText.setFontColor(ColorPalette.ERROR); 
         }
 
-        // Warte solange bis der rote oder blaue Kreis gecklickt wurde
+        // Warte solange bis der einer der Kreise gecklickt wurde
         while (true) {
             if (gruenerKreis.mousePressed()) {
                 gedrueckterKreis = 1;
