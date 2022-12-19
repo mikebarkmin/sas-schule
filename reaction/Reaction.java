@@ -53,28 +53,25 @@ public class Reaction {
      */
     View fenster;
 
-    public static void main(String[] args) {
-        new Reaction();
-    }
-
     public Reaction() {
         fenster = new View(400, 400);
         fenster.setName("Reaction");
         fenster.setBackgroundColor(ColorPalette.DARK_PURPLE);
 
         // Initialisiere alle notwendigen Objekte
-        auswertungsText = new Text(fenster.getWidth() / 2 - 250, fenster.getHeight() / 2 + 80, "Auswertung", Color.GREEN);
+        auswertungsText = new Text(fenster.getWidth() / 2 - 150, fenster.getHeight() / 2 + 80, "Auswertung", Color.GREEN);
         zudrueckenderKreisText = new Text(10, 10, "Klicke", ColorPalette.OLD_LAVENDER);
         gruenerKreis = new Circle(-50, fenster.getHeight() / 2, 50, ColorPalette.DEEP_SPACE_SPARKLE);
         orangenerKreis = new Circle(fenster.getWidth() + 50, fenster.getHeight() / 2, 50, ColorPalette.TUMBLEWEED);
         startButton = new Button(fenster.getWidth() / 2 - 50, fenster.getHeight() / 2 - 25, 100, 50, "Start", ColorPalette.GRULLO);
         weiterButton = new Button(fenster.getWidth() / 2 - 75, fenster.getHeight() / 2 - 25, 150, 50, "Weiter", ColorPalette.GRULLO);
 
-        // Verstecke alle irrelevanten Objekte
-        zudrueckenderKreisText.setHidden(true);
+        // Verstecke alle Objekte
         auswertungsText.setHidden(true);
+        zudrueckenderKreisText.setHidden(true);
         gruenerKreis.setHidden(true);
         orangenerKreis.setHidden(true);
+        startButton.setHidden(true);
         weiterButton.setHidden(true);
 
         /**
@@ -90,23 +87,29 @@ public class Reaction {
             } else if (zustand == 2) {
                 ablaufAuswertung();
             }
-            // Limitieren der Aktualisierungsrate des Fensters
-            // auf ca. 60 FPS, da 1 Sekunde = 1000 Millisekunden
-            // und wir warten 1000 / 60 Millisekunden = 16.66666.
-            fenster.wait(17);
+            fenster.wait(100);
         }
 
     }
 
+    /**
+     * Die Methode regelt den Ablauf im Startzustand
+     */
     public void ablaufStart() {
+        // Zeige alle notwendigen Objekte
+        startButton.setHidden(false);
         // Wenn Start gedrückt wurde, gehe in den Reaktion-Status
         // und verstecke irrelevante Objekte
         if (startButton.clicked()) {
+            startButton.setHidden(true);
+            // Wechsel in den Reaktionszustand
             zustand = 1;
-            startButton.setHidden(true); // TODO nicht verstecken
         }
     }
 
+    /**
+     * Die Methode regelt den Ablauf im Reaktionszustand
+     */
     public void ablaufReaktion() {
         // Zeige alle notwendigen Objekte
         gruenerKreis.setHidden(false);
@@ -120,40 +123,50 @@ public class Reaction {
         );
         orangenerKreis.moveTo(
             Tools.randomNumber(50, fenster.getWidth() - 50), 
-            Tools.randomNumber(50, fenster.getHeight() + 250)
+            Tools.randomNumber(50, fenster.getHeight() - 50)
         );
+        while(gruenerKreis.intersects(orangenerKreis)) {
+            gruenerKreis.moveTo(
+                Tools.randomNumber(50, fenster.getWidth() - 50),
+                Tools.randomNumber(50, fenster.getHeight() - 50)
+            );
+            orangenerKreis.moveTo(
+                Tools.randomNumber(50, fenster.getWidth() - 50), 
+                Tools.randomNumber(50, fenster.getHeight() - 50)
+            );
+        }
 
         // Skaliere die Kreise entsprechend des Punktestandes
         // Mehr Punkte = kleinere Kreise
         // Weniger Punkte = größere Kreise
-
+        // 40.000 Punkte sind die Referenz. 
+        // Das heißt je näher an 40.000 Punkte, desto kleiner der Kreis.
         double factor = 1 - (punkte/40000.0);
         // Limitiere den Wertebreich des Faktors
-        // auf [0.1; 2]
+        // auf [0.05; 2]
         if (factor > 2) {
             factor = 2;
-        } else if (factor < 0.1) {
-            factor = 0.1;
+        } else if (factor < 0.05) {
+            factor = 0.05;
         }
         gruenerKreis.scaleTo(50 * factor, 50 * factor);
         orangenerKreis.scaleTo(50 * factor, 50 * factor);
 
-        // Merke dir die Startzeit in Millisekunden
+        // Merke dir die Startzeit in Millisekunden zu Berechnung der Punkte
         startZeit = Tools.getStartTime();
         
         // Wähle einen zufällig einen Kreis, der gedrückt werden soll
-        int zudrueckenderKreis = Tools.randomNumber(1, 3);
+        int zudrueckenderKreis = Tools.randomNumber(1, 2);
 
-        // Zeige an welcher Kreis gedrückt werden muss
+        // Zeige an, welcher Kreis gedrückt werden muss
         if (zudrueckenderKreis == 1) {
             zudrueckenderKreisText.setFontColor(ColorPalette.DEEP_SPACE_SPARKLE);
         } else if (zudrueckenderKreis == 2) {
             zudrueckenderKreisText.setFontColor(ColorPalette.TUMBLEWEED);
-        } else {
-            zudrueckenderKreisText.setFontColor(ColorPalette.ERROR); 
-        }
+        } 
 
         // Warte solange bis der einer der Kreise gecklickt wurde
+        // und merke den gedrückten Kreis.
         while (true) {
             if (gruenerKreis.mousePressed()) {
                 gedrueckterKreis = 1;
@@ -173,18 +186,27 @@ public class Reaction {
 
             // Gibt mindestens 0 Punkte und maximal 3000, wenn sofort geklickt wurde.
             // Nach 3s gib 0 Punkte
-            punkte = punkte + Math.max(0, 3000 - (int) gebrauchteZeit);
+            int neuePunkte = 3000 - (int) gebrauchteZeit;
+            if (neuePunkte < 0) {
+                neuePunkte = 0;
+            }
+            punkte = punkte + neuePunkte;
         } else {
-            // Punktabzug
+            // Punktabzug, wenn der falsche Kreis gedrückt wurde
             punkte = punkte - 2000;
         }
 
-        // Verstecke alle nicht mehr notwendigen Objekte
+        // Verstecke alle nicht mehr benötigten Objekte
         zudrueckenderKreisText.setHidden(true);
         gruenerKreis.setHidden(true);
+        orangenerKreis.setHidden(true);
+        // Wechsel in den Auswertungszustand
         zustand = 2;
     }
 
+    /**
+     * Die Methode regelt den ablauf im Auswertungszustand
+     */
     public void ablaufAuswertung() {
         // Zeige alle notwendigen Objekte
         auswertungsText.setHidden(false);
@@ -194,7 +216,13 @@ public class Reaction {
         if (weiterButton.clicked()) {
             auswertungsText.setHidden(true);
             weiterButton.setHidden(true);
+            // Wechsel in den Reaktionszustand
             zustand = 1;
         }
+    }
+    
+    
+    public static void main(String[] args) {
+        new Reaction();
     }
 }
